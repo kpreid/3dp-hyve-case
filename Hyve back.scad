@@ -124,8 +124,8 @@ difference() {
     rounded_box(r=bat_radius, xyz=[bat_width, bat_frontback, bat_thick]);
     
     // battery compartment opening
-    translate([10, m_panel_height + bat_frontback - bat_radius - epsilon, -bat_thick])
-    cube([bat_width - 10, 99, bat_thick]);
+    translate([10, m_panel_height + bat_frontback - bat_radius * 2 - epsilon, -bat_thick])
+    rounded_box(r=bat_radius, xyz=[bat_width - 10, 99, bat_thick]);
     
     // battery compartment wiring passage
     color("Goldenrod")
