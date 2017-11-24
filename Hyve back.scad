@@ -21,7 +21,7 @@ m_edge_to_bat_jack_far_edge = 82;
 m_right_edge_to_output_jack_center = 29.0;
 m_top_to_output_jack_center = 4.52;
 
-// 9v battery compartment dimensions -- TODO not measured
+// 9v battery compartment dimensions
 bat_width = 53.12 /* measured with extra for snap */;
 bat_frontback = 25.73 /* measured */ + 2 /* slop */;
 bat_thick = 17.39 /* measured */ + 2 /* slop */;
