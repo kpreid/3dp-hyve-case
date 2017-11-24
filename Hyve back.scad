@@ -17,9 +17,14 @@ m_max_protrusion = m_max_thick - m_board_thick;
 m_clearance_leftright = 2.5;
 m_clearance_bottom = 8;
 m_clearance_top = 7;
-m_edge_to_bat_jack_far_edge = 82;
+m_clearance_top_jack_leads = 3;  // how far in from edge you can go before hitting a lead
+m_edge_to_bat_jack_far_edge = 83.5;  // includes SMD lead footprint area
 m_right_edge_to_output_jack_center = 29.0;
 m_top_to_output_jack_center = 4.52;
+m_output_jack_smd_width = 10.3;  // includes SMD lead footprint area
+m_output_jack_body_width = 8;  // includes SMD lead footprint area
+m_output_jack_protrusion = 8 - m_board_thick;
+m_mounting_hole_diameter = 3.19;
 
 // 9v battery compartment dimensions
 bat_width = 53.12 /* measured with extra for snap */;
@@ -28,11 +33,13 @@ bat_thick = 17.39 /* measured */ + 2 /* slop */;
 bat_radius = 2.5;
 
 // chosen parameters
-panel_tolerance = 0.2;
+panel_tolerance = 0.1;
 bat_wiring_width = 30;
 output_jack_clearance_dia = 10.0;
-epsilon = 0.5;
+epsilon = 0.2;
 extra_component_clearance = 2;
+smd_lead_protrusion = 1;  // space to allow for thickness of smd leads above board
+screw_diameter = 1;
 screw_min_length = 5;
 
 // derived parameters
@@ -43,7 +50,7 @@ case_wall_thick = m_board_thick;
 module screw_hole() {
     // TODO: pick screw hole diameter -- is not the same as Hyve holes unless we decide to go for a bolt & nut instead of screwing into plastic
     translate([0, 0, -30])
-    cylinder(r=1, h=999);
+    cylinder(r=screw_diameter, h=999);
 }
 
 module slant_box(dx, dy, dz1, dz2) {
@@ -82,7 +89,7 @@ difference() {
                 -100])
             cube([100, 100, 200]);
             
-            // subtract output jack hole
+            // subtract output jack hole to make nice rounded area
             translate([
                 used_panel_width - m_right_edge_to_output_jack_center,
                 used_panel_height - m_clearance_top - case_wall_thick - epsilon,
@@ -131,6 +138,32 @@ difference() {
         bat_wiring_width + epsilon,
         bat_frontback + m_clearance_top + epsilon,
         bat_thick*0.9 + epsilon]);
+    
+    // output jack clearance
+    translate([
+        used_panel_width - m_right_edge_to_output_jack_center,
+        used_panel_height,
+        0])
+    union() {
+        // SMD footprint
+        translate([
+            -m_output_jack_smd_width / 2,
+            -m_clearance_top - epsilon,
+            -smd_lead_protrusion])
+        cube([
+            m_output_jack_smd_width,
+            m_clearance_top - m_clearance_top_jack_leads + epsilon,
+            smd_lead_protrusion + epsilon]);
+        // main body
+        translate([
+            - m_output_jack_body_width / 2,
+            - m_clearance_top - epsilon,
+            -m_output_jack_protrusion])
+        cube([
+            m_output_jack_body_width,
+            m_clearance_top + epsilon,
+            m_output_jack_protrusion + epsilon]);
+    }
     
     // mounting screw holes
     translate([used_panel_width / 2, used_panel_height / 2, 0]) {
