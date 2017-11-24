@@ -14,9 +14,9 @@ echo("hp hole", m_hole_width / HP, m_hole_height / U);
 m_board_thick = 2.05;
 m_max_thick = 13.52;
 m_max_protrusion = m_max_thick - m_board_thick;
-m_clearance_leftright = 2.75;
-m_clearance_bottom = 9;
-m_clearance_top = 8;
+m_clearance_leftright = 2.5;
+m_clearance_bottom = 8;
+m_clearance_top = 7;
 m_edge_to_bat_jack_far_edge = 82;
 m_right_edge_to_output_jack_center = 29.0;
 m_top_to_output_jack_center = 4.52;
@@ -96,11 +96,11 @@ difference() {
     translate([
         m_edge_to_bat_jack_far_edge - bat_wiring_width - epsilon,
         m_panel_height - m_clearance_top - epsilon,
-        -bat_thick])
+        -bat_thick*0.9])
     cube([
         bat_wiring_width + epsilon,
         bat_frontback + m_clearance_top + epsilon,
-        bat_thick*0.9]);
+        bat_thick*0.9 + epsilon]);
     
     // holes
     translate([used_panel_width / 2, used_panel_height / 2, 0]) {
