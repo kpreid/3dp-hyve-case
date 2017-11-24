@@ -33,7 +33,7 @@ used_panel_height = m_panel_height;
 bat_wiring_width = 30;
 output_jack_clearance_dia = 10.0;
 epsilon = 0.5;
-extra_component_clearance = 0.1;
+extra_component_clearance = 2;
 screw_min_length = 5;
 
 // derived parameters
@@ -61,7 +61,8 @@ difference() {
                 dx=used_panel_width,
                 dy=used_panel_height + bat_frontback,
                 dz1=-screw_min_length,
-                dz2=-bat_thick);
+                // ratio adjustment prevents slope from cutting off battery compartment entry
+                dz2=-bat_thick * ((used_panel_height + bat_frontback) / used_panel_height));
             
             // subtract non-battery edge
             translate([
