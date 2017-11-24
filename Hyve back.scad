@@ -26,10 +26,8 @@ bat_width = 53.12 /* measured with extra for snap */;
 bat_frontback = 25.73 /* measured */ + 2 /* slop */;
 bat_thick = 17.39 /* measured */ + 2 /* slop */;
 
-used_panel_width = 30 * HP;
-used_panel_height = m_panel_height;
-
 // chosen parameters
+panel_tolerance = 0.2;
 bat_wiring_width = 30;
 output_jack_clearance_dia = 10.0;
 epsilon = 0.5;
@@ -37,6 +35,8 @@ extra_component_clearance = 2;
 screw_min_length = 5;
 
 // derived parameters
+used_panel_width = 30 * HP + panel_tolerance * 2;
+used_panel_height = m_panel_height + panel_tolerance * 2;
 case_wall_thick = m_board_thick;
 
 module screw_hole() {
@@ -84,8 +84,8 @@ difference() {
      
     color("RoyalBlue")
     union() {
-        // cutout for board -- TODO add tolerance
-        cube([used_panel_width, m_panel_height, 999]);
+        // cutout for board
+        cube([used_panel_width, used_panel_height, 999]);
         
         // cutout for components
         translate([
