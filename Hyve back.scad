@@ -34,7 +34,6 @@ bat_radius = 2.5;
 
 // chosen parameters
 panel_tolerance = 0.1;
-bat_wiring_width = 30;
 output_jack_clearance_dia = 10.0;
 epsilon = 0.2;
 extra_component_clearance = 2;
@@ -131,11 +130,11 @@ difference() {
     // battery compartment wiring passage
     color("Goldenrod")
     translate([
-        m_edge_to_bat_jack_far_edge - bat_wiring_width - epsilon,
+        bat_width - epsilon,
         m_panel_height - m_clearance_top - epsilon,
         -bat_thick*0.9])
     cube([
-        bat_wiring_width + epsilon,
+        m_edge_to_bat_jack_far_edge - bat_width + epsilon,
         bat_frontback + m_clearance_top + epsilon,
         bat_thick*0.9 + epsilon]);
     
