@@ -19,12 +19,18 @@ m_clearance_bottom = 9;
 m_clearance_top = 8;
 
 // 9v battery compartment dimensions -- TODO not measured
-bat_width = 53.12 /* measured with extra */;
+bat_width = 53.12 /* measured with extra for snap */;
 bat_frontback = 25.73 /* measured */ + 2 /* slop */;
 bat_thick = 17.39 /* measured */ + 2 /* slop */;
 
 used_panel_width = 30 * HP;
 used_panel_height = m_panel_height;
+
+// chosen parameters
+bat_wiring_width = 30;
+
+// derived parameters
+case_wall_thick = m_board_thick;
 
 module screw_hole() {
     // TODO: pick screw hole diameter -- is not the same as Hyve holes unless we decide to go for a bolt & nut instead of screwing into plastic
@@ -36,9 +42,9 @@ difference() {
     minkowski() {
         translate([0, 0, -bat_thick])
         cube([used_panel_width, used_panel_height + bat_frontback, bat_thick]);
-        sphere(r=m_board_thick, $fs=0.1);
+        sphere(r=case_wall_thick, $fs=0.1);
     }
-    
+     
     // cutout for board -- TODO add tolerance
     cube([used_panel_width, m_panel_height, 999]);
     
@@ -53,6 +59,16 @@ difference() {
         used_panel_height - m_clearance_bottom - m_clearance_top,
         999
     ]);
+    
+    // battery compartment, open on rear
+    translate([0, m_panel_height, -bat_thick])
+    cube([bat_width, bat_frontback, bat_thick]);
+    // battery compartment opening
+    translate([10, m_panel_height, -bat_thick])
+    cube([bat_width - 10, 999, bat_thick]);
+    // battery compartment wiring passage
+    translate([m_panel_width/2 - bat_wiring_width/2, m_panel_height - m_clearance_top, -bat_thick])
+    cube([bat_wiring_width, 999, bat_thick*0.9]);
     
     // holes
     translate([used_panel_width / 2, used_panel_height / 2, 0]) {
