@@ -17,7 +17,7 @@ m_max_protrusion = m_max_thick - m_board_thick;
 m_clearance_leftright = 2.75;
 m_clearance_bottom = 9;
 m_clearance_top = 8;
-m_left_edge_to_bat_jack_right = 81.78;
+m_edge_to_bat_jack_far_edge = 82;
 m_right_edge_to_output_jack_center = 29.0;
 m_top_to_output_jack_center = 4.52;
 
@@ -46,7 +46,7 @@ module screw_hole() {
             
 difference() {
     minkowski() {
-        sphere(r=case_wall_thick, $fs=0.1);
+        sphere(r=case_wall_thick, $fs=1);
         difference() {
             // main body shape
             translate([0, 0, -bat_thick])
@@ -54,15 +54,15 @@ difference() {
             
             // subtract non-battery edge
             translate([
-                m_left_edge_to_bat_jack_right,
+                m_edge_to_bat_jack_far_edge,
                 used_panel_height,
-                -999])
-
-            cube([999, 999, 9999]);
+                -100])
+            cube([100, 100, 200]);
+            
             // subtract output jack hole
             translate([
                 used_panel_width - m_right_edge_to_output_jack_center,
-                used_panel_height - m_clearance_top - epsilon,
+                used_panel_height - m_clearance_top - case_wall_thick - epsilon,
                 -m_top_to_output_jack_center])
             rotate([-90, 0, 0])
             cylinder(r=output_jack_clearance_dia / 2 + case_wall_thick, h=999);
@@ -94,7 +94,7 @@ difference() {
     
     // battery compartment wiring passage
     translate([
-        m_left_edge_to_bat_jack_right - bat_wiring_width - epsilon,
+        m_edge_to_bat_jack_far_edge - bat_wiring_width - epsilon,
         m_panel_height - m_clearance_top - epsilon,
         -bat_thick])
     cube([
