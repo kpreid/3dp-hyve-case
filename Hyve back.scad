@@ -53,7 +53,7 @@ module slant_box(dx, dy, dz1, dz2) {
             
 difference() {
     minkowski() {
-        sphere(r=case_wall_thick, $fs=1);
+        sphere(r=case_wall_thick, $fn=10);
         difference() {
             // main body shape
             translate([0, 0, 0])
