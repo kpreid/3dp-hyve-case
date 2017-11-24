@@ -52,6 +52,7 @@ module slant_box(dx, dy, dz1, dz2) {
 }
             
 difference() {
+    color("gray")
     minkowski() {
         sphere(r=case_wall_thick, $fn=10);
         difference() {
@@ -81,31 +82,36 @@ difference() {
         }
     }
      
-    // cutout for board -- TODO add tolerance
-    cube([used_panel_width, m_panel_height, 999]);
-    
-    // cutout for components
-    translate([
-        m_clearance_leftright,
-        m_clearance_bottom,
-        epsilon
-    ])
-    slant_box(
-        dx=used_panel_width - m_clearance_leftright * 2,
-        dy=used_panel_height - m_clearance_bottom - m_clearance_top,
-        dz1=-(epsilon + extra_component_clearance + 0),
-        dz2=-(epsilon + extra_component_clearance + m_max_protrusion)
-    );
+    color("RoyalBlue")
+    union() {
+        // cutout for board -- TODO add tolerance
+        cube([used_panel_width, m_panel_height, 999]);
+        
+        // cutout for components
+        translate([
+            m_clearance_leftright,
+            m_clearance_bottom,
+            epsilon
+        ])
+        slant_box(
+            dx=used_panel_width - m_clearance_leftright * 2,
+            dy=used_panel_height - m_clearance_bottom - m_clearance_top,
+            dz1=-(epsilon + extra_component_clearance + 0),
+            dz2=-(epsilon + extra_component_clearance + m_max_protrusion)
+        );
+    }
     
     // battery compartment interior volume
+    color("Green")
     translate([0, m_panel_height, -bat_thick])
     cube([bat_width, bat_frontback, bat_thick]);
     
     // battery compartment opening
-    translate([10, m_panel_height, -bat_thick])
-    cube([bat_width - 10, 999, bat_thick]);
+    translate([10, m_panel_height + bat_frontback - epsilon, -bat_thick])
+    cube([bat_width - 10, 99, bat_thick]);
     
     // battery compartment wiring passage
+    color("Goldenrod")
     translate([
         m_edge_to_bat_jack_far_edge - bat_wiring_width - epsilon,
         m_panel_height - m_clearance_top - epsilon,
@@ -115,7 +121,7 @@ difference() {
         bat_frontback + m_clearance_top + epsilon,
         bat_thick*0.9 + epsilon]);
     
-    // holes
+    // mounting screw holes
     translate([used_panel_width / 2, used_panel_height / 2, 0]) {
         translate([m_hole_width / 2, m_hole_height / 2, 0]) screw_hole();
         translate([m_hole_width / 2, -m_hole_height / 2, 0]) screw_hole();
