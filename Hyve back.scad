@@ -19,13 +19,18 @@ m_clearance_bottom = 9;
 m_clearance_top = 8;
 
 // 9v battery compartment dimensions -- TODO not measured
-bat_width = 40;
-bat_frontback = 20;
-bat_thick = 10;
+bat_width = 53.12 /* measured with extra */;
+bat_frontback = 25.73 /* measured */ + 2 /* slop */;
+bat_thick = 17.39 /* measured */ + 2 /* slop */;
 
 used_panel_width = 30 * HP;
 used_panel_height = m_panel_height;
 
+module screw_hole() {
+    // TODO: pick screw hole diameter -- is not the same as Hyve holes unless we decide to go for a bolt & nut instead of screwing into plastic
+    translate([0, 0, -30])
+    cylinder(r=1, h=999);
+}
 
 difference() {
     minkowski() {
@@ -48,4 +53,12 @@ difference() {
         used_panel_height - m_clearance_bottom - m_clearance_top,
         999
     ]);
+    
+    // holes
+    translate([used_panel_width / 2, used_panel_height / 2, 0]) {
+        translate([m_hole_width / 2, m_hole_height / 2, 0]) screw_hole();
+        translate([m_hole_width / 2, -m_hole_height / 2, 0]) screw_hole();
+        translate([-m_hole_width / 2, m_hole_height / 2, 0]) screw_hole();
+        translate([-m_hole_width / 2, -m_hole_height / 2, 0]) screw_hole();
+    }
 };
