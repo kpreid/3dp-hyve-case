@@ -33,6 +33,8 @@ used_panel_height = m_panel_height;
 bat_wiring_width = 30;
 output_jack_clearance_dia = 10.0;
 epsilon = 0.5;
+extra_component_clearance = 0.1;
+screw_min_length = 5;
 
 // derived parameters
 case_wall_thick = m_board_thick;
@@ -58,7 +60,7 @@ difference() {
             slant_box(
                 dx=used_panel_width,
                 dy=used_panel_height + bat_frontback,
-                dz1=-m_max_protrusion,  // TODO not best choice
+                dz1=-screw_min_length,
                 dz2=-bat_thick);
             
             // subtract non-battery edge
@@ -85,13 +87,14 @@ difference() {
     translate([
         m_clearance_leftright,
         m_clearance_bottom,
-        -m_max_protrusion  // TODO add tolerance
+        epsilon
     ])
-    cube([
-        used_panel_width - m_clearance_leftright * 2,
-        used_panel_height - m_clearance_bottom - m_clearance_top,
-        999
-    ]);
+    slant_box(
+        dx=used_panel_width - m_clearance_leftright * 2,
+        dy=used_panel_height - m_clearance_bottom - m_clearance_top,
+        dz1=-(epsilon + extra_component_clearance + 0),
+        dz2=-(epsilon + extra_component_clearance + m_max_protrusion)
+    );
     
     // battery compartment interior volume
     translate([0, m_panel_height, -bat_thick])
