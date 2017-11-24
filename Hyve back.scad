@@ -65,7 +65,7 @@ difference() {
                 used_panel_height - m_clearance_top - case_wall_thick - epsilon,
                 -m_top_to_output_jack_center])
             rotate([-90, 0, 0])
-            cylinder(r=output_jack_clearance_dia / 2 + case_wall_thick, h=999);
+            cylinder(r=output_jack_clearance_dia / 2 + case_wall_thick, h=999, $fn=6);
         }
     }
      
