@@ -25,6 +25,7 @@ m_top_to_output_jack_center = 4.52;
 bat_width = 53.12 /* measured with extra for snap */;
 bat_frontback = 25.73 /* measured */ + 2 /* slop */;
 bat_thick = 17.39 /* measured */ + 2 /* slop */;
+bat_radius = 2.5;
 
 // chosen parameters
 panel_tolerance = 0.2;
@@ -49,6 +50,15 @@ module slant_box(dx, dy, dz1, dz2) {
     rotate([0, 90, 0])
     linear_extrude(height=dx, center=false)
     polygon([[0, 0], [0, dy], [-dz2, dy], [-dz1, 0]]);
+}
+
+module rounded_box(r, xyz) {
+    translate([r, r, r])
+    minkowski() {
+        // TODO: An octahedron would be more useful and accurate, because sphere() does not extend fully to top/bottom ends
+        sphere(r=r, $fn=16);
+        cube([xyz[0] - r*2, xyz[1] - r*2, xyz[2] - r*2]);
+    }
 }
             
 difference() {
@@ -104,10 +114,11 @@ difference() {
     // battery compartment interior volume
     color("Green")
     translate([0, m_panel_height, -bat_thick])
-    cube([bat_width, bat_frontback, bat_thick]);
+    //cube([bat_width, bat_frontback, bat_thick]);
+    rounded_box(r=bat_radius, xyz=[bat_width, bat_frontback, bat_thick]);
     
     // battery compartment opening
-    translate([10, m_panel_height + bat_frontback - epsilon, -bat_thick])
+    translate([10, m_panel_height + bat_frontback - bat_radius - epsilon, -bat_thick])
     cube([bat_width - 10, 99, bat_thick]);
     
     // battery compartment wiring passage
