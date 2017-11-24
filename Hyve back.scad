@@ -17,6 +17,9 @@ m_max_protrusion = m_max_thick - m_board_thick;
 m_clearance_leftright = 2.75;
 m_clearance_bottom = 9;
 m_clearance_top = 8;
+m_left_edge_to_bat_jack_right = 81.78;
+m_right_edge_to_output_jack_center = 29.0;
+m_top_to_output_jack_center = 4.52;
 
 // 9v battery compartment dimensions -- TODO not measured
 bat_width = 53.12 /* measured with extra for snap */;
@@ -28,6 +31,8 @@ used_panel_height = m_panel_height;
 
 // chosen parameters
 bat_wiring_width = 30;
+output_jack_clearance_dia = 10.0;
+epsilon = 0.5;
 
 // derived parameters
 case_wall_thick = m_board_thick;
@@ -38,11 +43,30 @@ module screw_hole() {
     cylinder(r=1, h=999);
 }
 
+            
 difference() {
     minkowski() {
-        translate([0, 0, -bat_thick])
-        cube([used_panel_width, used_panel_height + bat_frontback, bat_thick]);
         sphere(r=case_wall_thick, $fs=0.1);
+        difference() {
+            // main body shape
+            translate([0, 0, -bat_thick])
+            cube([used_panel_width, used_panel_height + bat_frontback, bat_thick]);
+            
+            // subtract non-battery edge
+            translate([
+                m_left_edge_to_bat_jack_right,
+                used_panel_height,
+                -999])
+
+            cube([999, 999, 9999]);
+            // subtract output jack hole
+            translate([
+                used_panel_width - m_right_edge_to_output_jack_center,
+                used_panel_height - m_clearance_top - epsilon,
+                -m_top_to_output_jack_center])
+            rotate([-90, 0, 0])
+            cylinder(r=output_jack_clearance_dia / 2 + case_wall_thick, h=999);
+        }
     }
      
     // cutout for board -- TODO add tolerance
@@ -60,15 +84,23 @@ difference() {
         999
     ]);
     
-    // battery compartment, open on rear
+    // battery compartment interior volume
     translate([0, m_panel_height, -bat_thick])
     cube([bat_width, bat_frontback, bat_thick]);
+    
     // battery compartment opening
     translate([10, m_panel_height, -bat_thick])
     cube([bat_width - 10, 999, bat_thick]);
+    
     // battery compartment wiring passage
-    translate([m_panel_width/2 - bat_wiring_width/2, m_panel_height - m_clearance_top, -bat_thick])
-    cube([bat_wiring_width, 999, bat_thick*0.9]);
+    translate([
+        m_left_edge_to_bat_jack_right - bat_wiring_width - epsilon,
+        m_panel_height - m_clearance_top - epsilon,
+        -bat_thick])
+    cube([
+        bat_wiring_width + epsilon,
+        bat_frontback + m_clearance_top + epsilon,
+        bat_thick*0.9]);
     
     // holes
     translate([used_panel_width / 2, used_panel_height / 2, 0]) {
