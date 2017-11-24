@@ -81,12 +81,23 @@ difference() {
                 // ratio adjustment prevents slope from cutting off battery compartment entry
                 dz2=-bat_thick * ((used_panel_height + bat_frontback) / used_panel_height));
             
-            // subtract non-battery edge
+            // remove material around non-battery edge, decoratively
+            xstep = 5;
+            ydist = bat_frontback;
             translate([
                 m_edge_to_bat_jack_far_edge,
                 used_panel_height,
-                -100])
-            cube([100, 100, 200]);
+                0])
+            linear_extrude(height=999, center=true)
+            polygon([
+                [-999, 999],  // left end dummy point
+                [xstep * 0, ydist * 1.0],
+                [xstep * 1, ydist * 0.7],
+                [xstep * 1, ydist * 0.3], 
+                [xstep * 2, ydist * 0], 
+                [used_panel_width + epsilon, 0],
+                [999, 0]  // right end dummy point
+            ]);
             
             // subtract output jack hole to make nice rounded area
             translate([
