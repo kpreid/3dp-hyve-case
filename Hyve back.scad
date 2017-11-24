@@ -43,14 +43,23 @@ module screw_hole() {
     cylinder(r=1, h=999);
 }
 
+module slant_box(dx, dy, dz1, dz2) {
+    rotate([0, 90, 0])
+    linear_extrude(height=dx, center=false)
+    polygon([[0, 0], [0, dy], [-dz2, dy], [-dz1, 0]]);
+}
             
 difference() {
     minkowski() {
         sphere(r=case_wall_thick, $fs=1);
         difference() {
             // main body shape
-            translate([0, 0, -bat_thick])
-            cube([used_panel_width, used_panel_height + bat_frontback, bat_thick]);
+            translate([0, 0, 0])
+            slant_box(
+                dx=used_panel_width,
+                dy=used_panel_height + bat_frontback,
+                dz1=-m_max_protrusion,  // TODO not best choice
+                dz2=-bat_thick);
             
             // subtract non-battery edge
             translate([
