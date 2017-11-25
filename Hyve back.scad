@@ -1,5 +1,9 @@
 // dimensions in mm
 
+// options
+open_back = false;
+truncated = false;
+
 // Eurorack constants
 HP = 5.08;
 U = 1.25 * 25.4;
@@ -81,6 +85,11 @@ difference() {
                 // ratio adjustment prevents slope from cutting off battery compartment entry
                 dz2=-bat_thick * ((used_panel_height + bat_frontback) / used_panel_height));
             
+            if (truncated) {
+                translate([-epsilon, -epsilon, -500])
+                cube([999, used_panel_height * 0.9, 1000]);
+            }
+            
             // remove material around non-battery edge, decoratively
             xstep = 5;
             ydist = bat_frontback;
@@ -120,6 +129,7 @@ difference() {
             m_clearance_bottom,
             epsilon
         ])
+        scale([1, 1, open_back ? 10 : 1])  // just punch through if option is set
         slant_box(
             dx=used_panel_width - m_clearance_leftright * 2,
             dy=used_panel_height - m_clearance_bottom - m_clearance_top,
