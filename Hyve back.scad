@@ -30,6 +30,7 @@ m_output_jack_smd_width = 10.3;  // includes SMD lead footprint area
 m_output_jack_body_width = 8;  // includes SMD lead footprint area
 m_output_jack_protrusion = 8 - m_board_thick;
 m_mounting_hole_diameter = 3.19;
+m_hack_pad_to_top = 40.5;
 
 // 9v battery compartment dimensions
 bat_width = 55.0 /* measured with extra for snap */;
@@ -45,6 +46,7 @@ extra_component_clearance = 2;
 smd_lead_protrusion = 1;  // space to allow for thickness of smd leads above board
 screw_diameter = 2.1;  // tapping size for #3 coarse screw (#4 will fit but requires perfect alignment and we can always drill out)
 screw_min_length = 5;
+hack_pad_y_clearance = 20;
 
 // derived parameters
 used_panel_width = 30 * HP + panel_tolerance * 2;
@@ -115,7 +117,8 @@ difference() {
                 used_panel_height - m_clearance_top - case_wall_thick - epsilon,
                 m_board_thick - m_top_to_output_jack_center])
             rotate([-90, 0, 0])
-            cylinder(r=output_jack_clearance_dia / 2 + case_wall_thick, h=999, $fn=6);
+            cylinder(
+                r=output_jack_clearance_dia / 2 + case_wall_thick, h=999, $fn=6);
         }
     }
      
@@ -145,6 +148,18 @@ difference() {
                 // empirically set minimum-plastic-volume
                 bat_thick)
         );
+        
+        // cutout for "Hack" terminals (bigger than necessary, but would allow, like, connecting a jack there if we wanted)
+        rounding = m_clearance_leftright * 2;
+        extra_clearance = hack_pad_y_clearance + rounding * 2;
+        translate([
+            used_panel_width - rounding * 3,
+            used_panel_height - m_hack_pad_to_top - extra_clearance / 2, 
+            -13])
+        rounded_box(r=rounding, xyz=[
+            rounding * 3,
+            extra_clearance,
+            18]);
     }
     
     // battery compartment interior volume
