@@ -206,10 +206,14 @@ difference() {
         used_panel_width - m_right_edge_to_output_jack_center - 18,
         used_panel_height,
         -bat_thick / 2]) {
-        // panel mount hole
+        // panel mount hole, with anti-rotation key
         rotate([-90, 0, 0])
         translate([0, 0, -epsilon])
-        cylinder(d=power_switch_hole_diameter, h=99);
+        difference() {
+            cylinder(d=power_switch_hole_diameter, h=99);
+            translate([-power_switch_key_width / 2, -power_switch_hole_diameter / 2, 0])
+            cube([power_switch_key_width, power_switch_key_depth, 99]);
+        }
         
         // switch body clearance
         translate([
