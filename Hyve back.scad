@@ -32,9 +32,9 @@ m_output_jack_protrusion = 8 - m_board_thick;
 m_mounting_hole_diameter = 3.19;
 
 // 9v battery compartment dimensions
-bat_width = 53.12 /* measured with extra for snap */;
+bat_width = 55.0 /* measured with extra for snap */;
 bat_frontback = 25.73 /* measured */ + 2 /* slop */;
-bat_thick = 17.39 /* measured */ + 2 /* slop */;
+bat_thick = 17.39 /* measured */ + 1 /* slop */;
 bat_radius = 2.5;
 
 // chosen parameters
