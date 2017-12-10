@@ -43,7 +43,7 @@ output_jack_clearance_dia = 10.0;
 epsilon = 0.2;
 extra_component_clearance = 2;
 smd_lead_protrusion = 1;  // space to allow for thickness of smd leads above board
-screw_diameter = 1;
+screw_diameter = 2.1;  // tapping size for #3 coarse screw (#4 will fit but requires perfect alignment and we can always drill out)
 screw_min_length = 5;
 
 // derived parameters
@@ -54,7 +54,7 @@ case_wall_thick = m_board_thick;
 module screw_hole() {
     // TODO: pick screw hole diameter -- is not the same as Hyve holes unless we decide to go for a bolt & nut instead of screwing into plastic
     translate([0, 0, -30])
-    cylinder(r=screw_diameter, h=999);
+    cylinder(r=screw_diameter / 2, h=999);
 }
 
 module slant_box(dx, dy, dz1, dz2) {
