@@ -186,6 +186,35 @@ difference() {
             m_output_jack_protrusion + epsilon]);
     }
     
+    // power switch mounting hole
+    power_switch_body_clearance = 16;  // estimated
+    power_switch_body_depth = 16;  // estimated
+    power_switch_hole_diameter = 5.81;  // somewhat over 7/32"
+    power_switch_key_depth = 0.69;
+    power_switch_key_width = 1.0;
+    // power_switch_washer_key_width = 2.2;
+    // power_switch_washer_key_height = 1.45;
+    translate([
+        used_panel_width - m_right_edge_to_output_jack_center - 18,
+        used_panel_height,
+        -bat_thick / 2]) {
+        // panel mount hole
+        rotate([-90, 0, 0])
+        translate([0, 0, -epsilon])
+        cylinder(d=power_switch_hole_diameter, h=99);
+        
+        // switch body clearance
+        translate([
+            -power_switch_body_clearance / 2,
+            0,
+            power_switch_body_clearance / 2])
+        slant_box(
+            dx=power_switch_body_clearance,
+            dy=-max(m_clearance_top + epsilon, power_switch_body_depth),
+            dz1=-power_switch_body_clearance,
+            dz2=-power_switch_body_clearance);
+    }
+    
     // mounting screw holes
     translate([used_panel_width / 2, used_panel_height / 2, 0]) {
         translate([m_hole_width / 2, m_hole_height / 2, 0]) screw_hole();
