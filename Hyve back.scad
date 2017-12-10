@@ -134,8 +134,16 @@ difference() {
         slant_box(
             dx=used_panel_width - m_clearance_leftright * 2,
             dy=used_panel_height - m_clearance_bottom - m_clearance_top,
-            dz1=-(epsilon + extra_component_clearance + 0),
-            dz2=-(epsilon + extra_component_clearance + m_max_protrusion)
+            dz1=-max(
+                // necessary clearance
+                epsilon + extra_component_clearance + 0,
+                // empirically set minimum-plastic-volume
+                6),
+            dz2=-max(
+                // necessary clearance
+                epsilon + extra_component_clearance + m_max_protrusion,
+                // empirically set minimum-plastic-volume
+                bat_thick)
         );
     }
     
