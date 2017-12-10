@@ -9,6 +9,7 @@ HP = 5.08;
 U = 1.25 * 25.4;
 
 // measured
+// "protrusion" means component height perpendicular to back of board
 m_panel_width = 152.46;
 m_panel_height = 128.48;
 m_hole_width = 137.33;
@@ -112,7 +113,7 @@ difference() {
             translate([
                 used_panel_width - m_right_edge_to_output_jack_center,
                 used_panel_height - m_clearance_top - case_wall_thick - epsilon,
-                -m_top_to_output_jack_center])
+                m_board_thick - m_top_to_output_jack_center])
             rotate([-90, 0, 0])
             cylinder(r=output_jack_clearance_dia / 2 + case_wall_thick, h=999, $fn=6);
         }
