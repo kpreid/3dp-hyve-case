@@ -27,8 +27,8 @@ m_edge_to_bat_jack_far_edge = 83.5;  // includes SMD lead footprint area
 m_right_edge_to_output_jack_center = 29.0;
 m_top_to_output_jack_center = 4.52;
 m_output_jack_smd_width = 10.3;  // includes SMD lead footprint area
-m_output_jack_body_width = 8;  // includes SMD lead footprint area
-m_output_jack_protrusion = 8 - m_board_thick;
+m_output_jack_body_width = 6 + 1 /* slop */;
+m_output_jack_protrusion = 7.44 + 0.5 /* slop */ - m_board_thick;
 m_mounting_hole_diameter = 3.19;
 m_hack_pad_to_top = 40.5;
 
@@ -114,13 +114,15 @@ difference() {
             ]);
             
             // subtract output jack hole to make nice rounded area
+            hexagon_inscribed = sqrt(3)/2;  // we're making a hexagon but want room for a circle
             translate([
                 used_panel_width - m_right_edge_to_output_jack_center,
                 used_panel_height - m_clearance_top - case_wall_thick - epsilon,
                 m_board_thick - m_top_to_output_jack_center])
             rotate([-90, 0, 0])
             cylinder(
-                r=output_jack_clearance_dia / 2 + case_wall_thick, h=999, $fn=6);
+                d=output_jack_clearance_dia / hexagon_inscribed + case_wall_thick,
+                h=999, $fn=6);
         }
     }
      
