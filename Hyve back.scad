@@ -47,7 +47,7 @@ epsilon = 0.2;
 extra_component_clearance = 2;
 smd_lead_protrusion = 1;  // space to allow for thickness of smd leads above board
 screw_diameter = 2.1;  // tapping size for #3 coarse screw (#4 will fit but requires perfect alignment and we can always drill out)
-screw_min_length = 5;
+screw_min_length = 1/4 * 25.4;  // 1/4" screws
 hack_pad_y_clearance = 20;
 
 // derived parameters
@@ -56,7 +56,6 @@ used_panel_height = m_panel_height + panel_tolerance * 2;
 case_wall_thick = m_board_thick;
 
 module screw_hole() {
-    // TODO: pick screw hole diameter -- is not the same as Hyve holes unless we decide to go for a bolt & nut instead of screwing into plastic
     translate([0, 0, -30])
     cylinder(r=screw_diameter / 2, h=999);
 }
@@ -86,7 +85,7 @@ difference() {
             slant_box(
                 dx=used_panel_width,
                 dy=used_panel_height + bat_frontback,
-                dz1=-screw_min_length,
+                dz1=-(screw_min_length - 2 * case_wall_thick),
                 // ratio adjustment prevents slope from cutting off battery compartment entry
                 dz2=-bat_thick * ((used_panel_height + bat_frontback) / used_panel_height));
             
@@ -143,7 +142,7 @@ difference() {
                 // necessary clearance
                 epsilon + extra_component_clearance + 0,
                 // empirically set minimum-plastic-volume
-                6),
+                screw_min_length - case_wall_thick),
             dz2=-max(
                 // necessary clearance
                 epsilon + extra_component_clearance + m_max_protrusion,
