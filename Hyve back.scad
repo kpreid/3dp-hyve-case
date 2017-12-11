@@ -3,6 +3,7 @@
 // options
 open_back = false;
 truncated = false;
+flat_bottom = false;
 
 // Eurorack constants
 HP = 5.08;
@@ -75,7 +76,15 @@ module rounded_box(r, xyz) {
         cube([xyz[0] - r*2, xyz[1] - r*2, xyz[2] - r*2]);
     }
 }
-            
+
+main_body_dy = used_panel_height + bat_frontback;
+main_body_dz1 = -(screw_min_length - 2 * case_wall_thick);
+// ratio adjustment prevents slope from cutting off battery compartment entry
+main_body_dz2 = -bat_thick * ((used_panel_height + bat_frontback) / used_panel_height);
+
+rotate([
+    flat_bottom ? atan2(main_body_dz1 - main_body_dz2, main_body_dy) : 0,
+    0, 0])  
 difference() {
     color("gray")
     minkowski() {
@@ -85,10 +94,9 @@ difference() {
             translate([0, 0, 0])
             slant_box(
                 dx=used_panel_width,
-                dy=used_panel_height + bat_frontback,
-                dz1=-(screw_min_length - 2 * case_wall_thick),
-                // ratio adjustment prevents slope from cutting off battery compartment entry
-                dz2=-bat_thick * ((used_panel_height + bat_frontback) / used_panel_height));
+                dy=main_body_dy,
+                dz1=main_body_dz1,
+                dz2=main_body_dz2);
             
             if (truncated) {
                 translate([-epsilon, -epsilon, -500])
