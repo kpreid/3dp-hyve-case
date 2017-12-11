@@ -49,6 +49,7 @@ smd_lead_protrusion = 1;  // space to allow for thickness of smd leads above boa
 screw_diameter = 2.1;  // tapping size for #3 coarse screw (#4 will fit but requires perfect alignment and we can always drill out)
 screw_min_length = 1/4 * 25.4;  // 1/4" screws
 hack_pad_y_clearance = 20;
+wiring_frontback = 22;
 
 // derived parameters
 used_panel_width = 30 * HP + panel_tolerance * 2;
@@ -95,7 +96,7 @@ difference() {
             }
             
             // remove material around non-battery edge, decoratively
-            xstep = 5;
+            xstep = 8;
             ydist = bat_frontback;
             translate([
                 m_edge_to_bat_jack_far_edge,
@@ -104,10 +105,10 @@ difference() {
             linear_extrude(height=999, center=true)
             polygon([
                 [-999, 999],  // left end dummy point
-                [xstep * 0, ydist * 1.0],
-                [xstep * 1, ydist * 0.7],
-                [xstep * 1, ydist * 0.3], 
-                [xstep * 2, ydist * 0], 
+                [xstep * -1, ydist * 1.0],
+                [xstep * 0, ydist * 0.8],
+                [xstep * 0, ydist * 0.2], 
+                [xstep * 1, ydist * 0], 
                 [used_panel_width + epsilon, 0],
                 [999, 0]  // right end dummy point
             ]);
@@ -172,7 +173,7 @@ difference() {
     // battery compartment opening
     translate([
         bat_opening_offset,
-        m_panel_height + bat_frontback - bat_radius * 2 - epsilon,
+        m_panel_height + bat_frontback / 2,
         -bat_thick])
     rounded_box(r=bat_radius, xyz=[bat_opening_width, 99, bat_thick]);
     
@@ -184,7 +185,7 @@ difference() {
         -bat_thick*0.9])
     cube([
         m_edge_to_bat_jack_far_edge - bat_width + epsilon,
-        bat_frontback + m_clearance_top + epsilon,
+        wiring_frontback + m_clearance_top + epsilon,
         bat_thick*0.9 + epsilon]);
     
     // output jack clearance
