@@ -32,14 +32,16 @@ m_output_jack_protrusion = 8 - m_board_thick;
 m_mounting_hole_diameter = 3.19;
 m_hack_pad_to_top = 40.5;
 
-// 9v battery compartment dimensions
-bat_width = 55.0 /* measured with extra for snap */;
+// 9v battery compartment dimensions, semi-chosen
+bat_width = 52.46 /* diagonal size of battery, to allow tilting it into the compartment */;
 bat_frontback = 25.73 /* measured */ + 2 /* slop */;
 bat_thick = 17.39 /* measured */ + 1 /* slop */;
 bat_radius = 2.5;
+bat_opening_width = 45.0;
+bat_opening_offset = 10.0;
 
 // chosen parameters
-panel_tolerance = 0.1;
+panel_tolerance = 0.12;
 output_jack_clearance_dia = 10.0;
 epsilon = 0.2;
 extra_component_clearance = 2;
@@ -169,8 +171,11 @@ difference() {
     rounded_box(r=bat_radius, xyz=[bat_width, bat_frontback, bat_thick]);
     
     // battery compartment opening
-    translate([10, m_panel_height + bat_frontback - bat_radius * 2 - epsilon, -bat_thick])
-    rounded_box(r=bat_radius, xyz=[bat_width - 10, 99, bat_thick]);
+    translate([
+        bat_opening_offset,
+        m_panel_height + bat_frontback - bat_radius * 2 - epsilon,
+        -bat_thick])
+    rounded_box(r=bat_radius, xyz=[bat_opening_width, 99, bat_thick]);
     
     // battery compartment wiring passage
     color("Goldenrod")
